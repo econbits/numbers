@@ -39,7 +39,7 @@ func Parse(ds string) DecString {
 // exponent-part ::= indicator [sign] digits
 // numeric-value ::= decimal-part [exponent-part]
 // ds ::= [sign] numeric-value
-var reNumeric = regexp.MustCompile(`(?i)^(?P<decsign>[+\-]{0,1})(?P<coeff>[0-9]*\.{0,1}[0-9]*)(e(?P<expsign>[+\-]{0,1})(?P<exp>[0-9]+)){0,1}$`)
+var reNumeric = regexp.MustCompile(`(?i)^\s*(?P<decsign>[+\-]{0,1})\s*(?P<coeff>[0-9]*\.{0,1}[0-9]*)\s*(e\s*(?P<expsign>[+\-]{0,1})\s*(?P<exp>[0-9]+)){0,1}\s*$`)
 
 func parseNumeric(ds string) DecString {
 	dp := DecParts{positive: true, coeff: "", exp: DecExp{positive: true, value: ""}}
@@ -79,9 +79,9 @@ var reMinusInf = regexp.MustCompile(`(?i)^\s*\-\s*Inf(inity){0,1}\s*$`)
 // nan ::= 'NaN' [digits] | 'sNaN' [digits]
 // ds ::= [sign] nan
 var reNaN = regexp.MustCompile(`(?i)^\s*\+{0,1}\s*nan(\s+[0-9]+){0,1}\s*$`)
-var reMinusNaN = regexp.MustCompile(`(?i)^\-nan(\s+[0-9]+){0,1}$`)
-var reSNaN = regexp.MustCompile(`(?i)^\+{0,1}snan\s+[0-9]*$`)
-var reMinusSNaN = regexp.MustCompile(`(?i)^\-snan\s+[0-9]*$`)
+var reMinusNaN = regexp.MustCompile(`(?i)^\s*\-\s*nan(\s+[0-9]+){0,1}\s*$`)
+var reSNaN = regexp.MustCompile(`(?i)^\s*\+{0,1}\s*snan(\s+[0-9]+){0,1}\s*$`)
+var reMinusSNaN = regexp.MustCompile(`(?i)^\s*\-\s*snan(\s+[0-9]+){0,1}\s*$`)
 
 var specialValues = []struct {
 	re *regexp.Regexp
