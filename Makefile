@@ -17,12 +17,10 @@ vet: ## report likely mistakes in packages
 > go vet
 
 test: ## run tests
-> go test -v github.com/econbits/numbers
-> go test -v github.com/econbits/numbers/private/decstring
+> go test -v github.com/econbits/numbers/...
 
 coverage: ## gets the test coverage for the code and fails if minimum level is not reached
-> go test -coverprofile=coverage.out econbits.com/numbers
-> go test -coverprofile=coverage.out econbits.com/numbers/decimal
+> go test -coverprofile=coverage.out github.com/econbits/numbers/...
 > go tool cover -html=coverage.out
 
 test-all: test vet coverage ## runs all the checks to run before pushing to github
