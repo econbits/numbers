@@ -117,12 +117,26 @@ func TestNegativeSNaN(t *testing.T) {
 }
 
 func TestOne(t *testing.T) {
-	testruns := []string{"1", "+1", "1.0", "+1.0", "1.", "+1."}
+	testruns := []string{"1", "+1", "1.0", "+1.0", "1.", "+1.", "1.0e0"}
 	for _, tinput := range testruns {
 		for _, txt := range combineInput(tinput) {
 			d := Parse(txt)
-			if d.DecParts() == nil {
+			parts := d.DecParts()
+			if parts == nil {
 				t.Errorf("Parse(%s): expected DecParts, got=%v", txt, d)
+			}
+			if !parts.IsPositive() {
+				t.Errorf("Parse(%s): expected positve decimal, got=%v", txt, parts)
+			}
+			if !strings.Contains(parts.Coeff(), "1") {
+				t.Errorf("Parse(%s): expected '1' in coefficient, got=%v", txt, parts)
+			}
+			exp := parts.Exp()
+			if !exp.IsPositive() {
+				t.Errorf("Parse(%s): expected positve exponent, got=%v", txt, exp)
+			}
+			if exp.Value() != "0" {
+				t.Errorf("Parse(%s): expected exponent 0, got=%v", txt, exp)
 			}
 			if d.IsInf() {
 				t.Errorf("Parse(%s): unexpected Inf", txt)

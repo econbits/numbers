@@ -42,7 +42,7 @@ func Parse(ds string) DecString {
 var reNumeric = regexp.MustCompile(`(?i)^\s*(?P<decsign>[+\-]{0,1})\s*(?P<coeff>[0-9]*\.{0,1}[0-9]*)\s*(e\s*(?P<expsign>[+\-]{0,1})\s*(?P<exp>[0-9]+)){0,1}\s*$`)
 
 func parseNumeric(ds string) DecString {
-	dp := DecParts{positive: true, coeff: "", exp: DecExp{positive: true, value: ""}}
+	dp := DecParts{positive: true, coeff: "", exp: DecExp{positive: true, value: "0"}}
 
 	groupNames := reNumeric.SubexpNames()
 	matches := reNumeric.FindStringSubmatch(ds)
@@ -53,13 +53,15 @@ func parseNumeric(ds string) DecString {
 			continue
 		}
 		if groupNames[i] == "decsign" {
-			dp.positive = (value == "+")
+			dp.positive = (value != "-")
 		} else if groupNames[i] == "coeff" {
 			dp.coeff = value
 		} else if groupNames[i] == "expsign" {
-			dp.exp.positive = (value == "+")
+			dp.exp.positive = (value != "-")
 		} else if groupNames[i] == "exp" {
-			dp.exp.value = value
+			if len(value) > 0 {
+				dp.exp.value = value
+			}
 		}
 	}
 	d := DecString{sv: 0, dp: nil}
